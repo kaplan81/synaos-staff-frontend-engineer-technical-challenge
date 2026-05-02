@@ -1,0 +1,23 @@
+{
+  "name": "synaos-technical-challenge",
+  "version": "0.0.0",
+  "description": "Design doc for Staff Frontend Engineer position",
+  "homepage": "https://github.com/kaplan81/synaos-staff-frontend-engineer-technical-challenge#readme",
+  "bugs": {
+    "url": "https://github.com/kaplan81/synaos-staff-frontend-engineer-technical-challenge/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaplan81/synaos-staff-frontend-engineer-technical-challenge.git"
+  },
+  "license": "ISC",
+  "author": "Andres Gesteira",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.3"
+  }
+}
