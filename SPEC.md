@@ -47,17 +47,14 @@ Every technical decision has a business consequence. Pick 2-3 of your key techni
 
 ## What We're Evaluating
 
-| **Dimension**           | **What great looks like**                                                                                                                                                                                |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Business acumen**     | Connects every technical recommendation to a user outcome or business constraint. Understands that "the right architecture" is the one that ships value within the timeline.                             |
-| **Architectural depth** | Demonstrates real understanding of WebGL rendering pipelines, state management at scale, and real-time data flow — not just framework-level knowledge. Goes below the abstraction layer when it matters. |
-| **Pragmatism**          | Makes hard choices. Says "we won't do X because Y matters more right now" rather than proposing an idealized system. Distinguishes between day-1 requirements and future improvements.                   |
-
-| **Dimension**                | **What great looks like**                                                                                                                                                                       |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Organizational awareness** | Recognizes that the hardest part of a Staff role is driving change across teams without direct authority. Proposes realistic strategies for alignment, not just technical blueprints.           |
-| **Communication**            | The document itself is the proof. Is it clear? Would a product manager understand the trade-off section? Would a senior engineer find the technical sections credible?                          |
-| **Comfort with ambiguity**   | The scenario is intentionally underspecified. Strong candidates identify what's missing, state their assumptions explicitly, and explain how different assumptions would change their approach. |
+| **Dimension**                | **What great looks like**                                                                                                                                                                                |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Business acumen**          | Connects every technical recommendation to a user outcome or business constraint. Understands that "the right architecture" is the one that ships value within the timeline.                             |
+| **Architectural depth**      | Demonstrates real understanding of WebGL rendering pipelines, state management at scale, and real-time data flow — not just framework-level knowledge. Goes below the abstraction layer when it matters. |
+| **Pragmatism**               | Makes hard choices. Says "we won't do X because Y matters more right now" rather than proposing an idealized system. Distinguishes between day-1 requirements and future improvements.                   |
+| **Organizational awareness** | Recognizes that the hardest part of a Staff role is driving change across teams without direct authority. Proposes realistic strategies for alignment, not just technical blueprints.                    |
+| **Communication**            | The document itself is the proof. Is it clear? Would a product manager understand the trade-off section? Would a senior engineer find the technical sections credible?                                   |
+| **Comfort with ambiguity**   | The scenario is intentionally underspecified. Strong candidates identify what's missing, state their assumptions explicitly, and explain how different assumptions would change their approach.          |
 
 ## What We're NOT Evaluating
 
