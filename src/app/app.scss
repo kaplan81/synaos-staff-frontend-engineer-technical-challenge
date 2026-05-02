@@ -1,0 +1,36 @@
+.shell {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  margin: 0 auto;
+  max-width: 42rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  line-height: 1.5;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.lead code {
+  font-size: 0.925em;
+  padding: 0.125rem 0.35rem;
+  border-radius: 0.25rem;
+  background: #e2e8f0;
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+  color: #334155;
+}

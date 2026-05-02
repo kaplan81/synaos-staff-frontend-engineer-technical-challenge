@@ -1,7 +1,7 @@
 {
   "name": "synaos-technical-challenge",
   "version": "0.0.0",
-  "description": "Design doc for Staff Frontend Engineer position",
+  "description": "Design doc and Angular app for Staff Frontend Engineer position",
   "homepage": "https://github.com/kaplan81/synaos-staff-frontend-engineer-technical-challenge#readme",
   "bugs": {
     "url": "https://github.com/kaplan81/synaos-staff-frontend-engineer-technical-challenge/issues"
@@ -12,12 +12,33 @@
   },
   "license": "ISC",
   "author": "Andres Gesteira",
-  "type": "commonjs",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "test:ci": "ng test --watch=false"
+  },
+  "private": true,
+  "packageManager": "npm@11.9.0",
+  "dependencies": {
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "prettier": "^3.8.3"
+    "@angular/build": "^21.2.9",
+    "@angular/cli": "^21.2.9",
+    "@angular/compiler-cli": "^21.2.0",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
   }
 }
