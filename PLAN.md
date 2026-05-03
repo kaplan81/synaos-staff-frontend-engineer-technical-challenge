@@ -89,16 +89,16 @@ flowchart LR
 
 ## 4. Delivery & organisational strategy (~20 weeks)
 
-Roughly **five months** on the calendar, or **20 weeks** end-to-end — about **ten two-week sprints** in total, if you plan in sprint-sized chunks (some phases use an odd week count on purpose so work lines up with milestones, not the calendar alone).
+Roughly **five months** (~**20 weeks**): **ten two-week sprints** in a row. The phases below are **only full 2-week sprints** — no half-week or “spillover” buckets — so planning, capacity, and demos stay on a normal sprint cadence.
 
 | Phase | Weeks (sprints) | What we deliver — in product terms                                                                 |
 | ----- | --------------- | -------------------------------------------------------------------------------------------------- |
-| **0** | **W1–2** — 2 weeks — **1** two-week sprint | **Agree how we will prove success** before go-live (which rooms, which machines, what “good” looks like). **Turn on basic measurement** so we know where time and data are actually spent. **Record real live traffic** from the websocket so we plan from facts, not guesses. |
-| **1** | **W3–6** — 4 weeks — **2** two-week sprints | **Ship a safer new path for live robot data** behind a feature flag — users see the same app, but the plumbing that will scale is in place. **Start the conversation with backend teams** on smaller, smarter message shapes (first agreed slices, not a big-bang rewrite). |
-| **2** | **W7–11** — 5 weeks — **2½** two-week sprints (two full sprints + one week) | **Roll out the shared fleet map package carefully**: run it next to the old map, then **switch over in steps** so the shopfloor never gets a risky “big switch” day. |
-| **3** | **W12–15** — 4 weeks — **2** two-week sprints | **Make the second control-room setup real**: same experience and rules as the first, with **login and customer boundaries** tightened. **Track down “double subscriptions”** and other foot-guns that waste bandwidth or confuse operators. |
-| **4** | **W16–18** — 3 weeks — **1½** two-week sprints (one full sprint + one week) | **Rehearse at full customer scale** with everyone in the room. **Polish how the three new vehicle types look** on the map. **Turn on optional 3D drill-in** when the 3D assets are actually ready — not before. |
-| **5** | **W19–20** — 2 weeks — **1** two-week sprint | **Stop adding scope**, **freeze what “done” means** for go-live, write the **runbook and escalation path** for when things wobble, and **last hardening** before handover. |
+| **0** | **W1–2** — 2 weeks — **1** sprint | **Agree how we will prove success** before go-live (which rooms, which machines, what “good” looks like). **Turn on basic measurement** so we know where time and data are actually spent. **Record real live traffic** from the websocket so we plan from facts, not guesses. |
+| **1** | **W3–6** — 4 weeks — **2** sprints | **Ship a safer new path for live robot data** behind a feature flag — users see the same app, but the plumbing that will scale is in place. **Start the conversation with backend teams** on smaller, smarter message shapes (first agreed slices, not a big-bang rewrite). |
+| **2** | **W7–10** — 4 weeks — **2** sprints | **Roll out the shared fleet map package carefully**: run it next to the old map, then **switch over in steps** so the shopfloor never gets a risky “big switch” day. |
+| **3** | **W11–14** — 4 weeks — **2** sprints | **Make the second control-room setup real**: same experience and rules as the first, with **login and customer boundaries** tightened. **Track down “double subscriptions”** and other foot-guns that waste bandwidth or confuse operators. |
+| **4** | **W15–18** — 4 weeks — **2** sprints | **Rehearse at full customer scale** with everyone in the room. **Polish how the three new vehicle types look** on the map. **Turn on optional 3D drill-in** when the 3D assets are actually ready — not before. |
+| **5** | **W19–20** — 2 weeks — **1** sprint | **Stop adding scope**, **freeze what “done” means** for go-live, write the **runbook and escalation path** for when things wobble, and **last hardening** before handover. |
 
 ### Influencing mechanics (no-line-authority realism)
 
