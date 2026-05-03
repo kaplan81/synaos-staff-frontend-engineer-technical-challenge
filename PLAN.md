@@ -141,28 +141,3 @@ Three engineering choices merit executive translation—operators feel them, pur
 ### 5.4 One sentence for leadership
 
 Invest simultaneously in pipe shape **and** shared canvas mechanics **and** temporary funded alignment—or risk paying all three costs later under OEM spotlight.
-
-## 6. Open questions & earliest validations
-
-Check during **Phase 0** (cheap if early, expensive if late):
-
-1. Profiler-first dominant bottleneck attribution (GPU vs worker vs Angular main-thread budget).
-2. Captured websocket size / frequency empirical histograms—not assumed.
-3. Written OEM rehearsal script, signed off, aligning accepted machine choreography (one heavy map per PC, control-room on separate hardware).
-4. Gateway squads **appetite** scorecard for deltas / viewport narrowing vs. phased compromise path.
-5. Industrial model pipeline checkpoints for lazily-loaded 3D remote.
-6. Contractual workstation hardware attestation on file (per assumption 3 above).
-7. Early Signal Store façade spike: NGXS chatter reduction vs façade-only map subscription experiment.
-
-## Appendix — suggestion for a 60-minute defence walkthrough (~20 minutes content)
-
-| Minutes | Focus                                         |
-| ------: | --------------------------------------------- |
-|       2 | Opening assumptions + rationale               |
-|       4 | Persons + conflict table → binding priorities |
-|       5 | Risks R1–R3 (plain language emphasis on R3)   |
-|       6 | Diagram + façade / canvas packages            |
-|       3 | Timeline + borrowing / council                |
-|      ~2 | Trade-off recap: Section 5.1–5.4 headlines    |
-
-Prepared pivots: timeline halved aggressively; hypothetical OEM demands multi-robot live 3D; backend alignment stalls sharply; leadership declines borrowed platform capacity—each maps to phased fallback already documented (Worker diffing, postpone 3D scope, escalate contractually, lengthen risk span respectively).
