@@ -116,8 +116,7 @@ A trade-off means **giving up something tempting** because the alternative fails
 
 **5.1 Deltas & viewports versus “ship the JSON tweak quietly.”** A lean realtime contract earns **steady maps and sane bandwidth** near 300 robots, **but** every payload change crosses teams and takes agreement time. Leaving the hose fat keeps **solo velocity** briefly, **yet** jitter tricks and buffering do **not** fix bytes on the wire—acceptance rehearsals stay fragile.
 
-**5.2 `@synaos/realtime-canvas` versus squad-owned canvases.** One shared renderer yields **the same rehearsal picture everywhere** (performance tuning once), **but** map flourishes funnel through shared ownership—you cannot fork five private engines without paying for it. Many canvases maximise **near-term team freedom** **until** rehearsals disagree and merges become political.
-
+**5.2 `@synaos/realtime-canvas` versus squad-owned canvases.** One shared renderer yields **the same rehearsal picture everywhere** (performance tuned in one place), **but** map-affecting work is negotiated—fewer cowboy forks. Several canvases keep **squads nimble locally** until **different screens** collide at rehearsals and merges turn political.
 **5.3 Working-group borrowed time versus “stay in your sprint lane.”** Donating fractional heads to rhythm + CI on shared artefacts trades **straight-line feature throughput** today for fewer cross-squad explosions later. Saving those hours postpones clashes—**risk moves** toward the rehearsal window rather than disappearing.
 
 **5.4 Leaders decide together.** Fund **contract discipline on the wire**, **one shared map engine**, **and borrowed coordination as a unit**—or expect to swallow all three gaps when the runway is gone.
