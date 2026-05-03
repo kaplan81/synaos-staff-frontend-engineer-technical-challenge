@@ -1,103 +1,66 @@
-# Synaos Staff Frontend Challenge
+# Synaos Staff Frontend Challenge — Architectural review & design add-ons
 
-## Architectural Review & Improved Design Proposal
+## 1. Executive summary
 
----
+[PLAN.md](PLAN.md) is strong: pragmatic, no unnecessary rewrites, and it correctly focuses the telemetry hot path on a worker, façade, and dedicated renderer. The harder problem at this scale is running a **multi-team realtime frontend** that scales reliably, can be **observed end-to-end**, **recovers predictably**, and evolves without surprise breakage.
 
-## 1. Executive Summary
+This note tightens the story around **dependency awareness**, **observability**, **RTO/RPO-style recovery**, **snapshot + delta + sequence numbers**, **realtime-oriented testing**, and **explicit performance targets**.
 
-The current PLAN.md is strong: it is pragmatic, avoids unnecessary rewrites, and correctly identifies the telemetry hot path with a worker + facade + dedicated rendering approach.
+## 2. Key architectural principles
 
-However, the real challenge is not rendering 300 robots — it is operating a **real-time, multi-team frontend platform** that:
+### 2.1 Dependency awareness
 
-- Scales reliably
-- Is observable end-to-end
-- Recovers safely from failure
-- Evolves without breaking production
+Dependencies must be explicit: Module Federation remotes, shared packages, backend contracts, runtime config. Practices: dependency map, ownership per capability, semver, contract tests, compatibility matrix. **Rule:** micro-frontends must not depend on each other’s internal state.
 
-This proposal strengthens the plan by introducing:
+### 2.2 Contract-first realtime
 
-- Dependency awareness
-- End-to-end observability
-- Explicit recovery strategy (RTO/RPO)
-- Snapshot + delta consistency model
-- Real-time testing strategy
-- Measurable performance targets
+Telemetry: versioned, backward-compatible, validated at runtime. **Model:** authoritative **snapshots**, **deltas**, **sequence numbers** (ordering + recovery).
 
----
+### 2.3 Realtime isolation
 
-## 2. Key Architectural Principles
+Separate high-frequency telemetry (e.g. positions) from low-frequency app state. **Worker** parses/merges telemetry; **façade** exposes a minimal stable API to Angular; avoid high-frequency traffic through global NGXS.
 
-### 2.1 Dependency Awareness
+### 2.4 Dedicated rendering pipeline
 
-The system must make dependencies explicit across:
+Decouple rendering from Angular’s lifecycle; optimise for many moving entities. Batching/instancing, LOD, interpolation, GPU-friendly updates.
 
-- Micro-frontends
-- Shared libraries
-- Backend contracts
-- Runtime configuration
+### 2.5 Observability (first-class)
 
-**Key practices:**
+End-to-end visibility: backend → gateway → browser → worker → renderer. **Minimum signals:** E2E latency to render, FPS / frame time, memory trend, worker queue depth, dropped updates, stale entity count, reconnect events, active contract/version and feature flags.
 
-- Dependency map (remotes, shared packages, contracts)
-- Clear ownership per capability
-- Semantic versioning
-- Contract testing
-- Compatibility matrix
+### 2.6 Resilience
 
-> Rule: Micro-frontends must not depend on each other's internal state.
+Design for graceful degradation under unstable network, stale data, partial failures, and rendering saturation.
 
----
+## 3. Recovery strategy (RTO / RPO)
 
-### 2.2 Contract-First Real-Time Architecture
+Define explicit expectations (tune in Phase 0): e.g. dashboard usable after failure **< ~2 min**; websocket reconnect + resync **< ~10 s**; user-visible staleness threshold **~3–5 s**. **On reconnect:** fetch authoritative snapshot, resume deltas from a known sequence, mark entities stale until confirmed fresh. **Degraded mode:** last-known positions, timestamps + stale indicators, system health banner. Non-critical failures must not take down the main operational view.
 
-Telemetry must be:
+## 4. Performance targets
 
-- Versioned
-- Backward-compatible
-- Validated at runtime
+Architecture must be measurable: **~300 robots** without an FPS cliff; **p95** backend→render **~250 ms** (validate); stable memory over **8-hour** sessions; reconnect/resync in seconds; explicit stale handling; **second control-room view** must not degrade the primary posture.
 
-**Model:**
+## 5. Testing strategy (realtime)
 
-- Snapshot (authoritative state)
-- Delta updates (incremental changes)
-- Sequence numbers (ordering + recovery)
+Unit tests are not enough. Add: synthetic websocket load (**300+** robots); contract tests on telemetry and snapshots; **8-hour** soaks (memory, FPS, stale counts); failure-mode tests (disconnects, reconnect storms, out-of-order and duplicate events); visual regression; canary/shadow deployments before full rollout.
 
----
+## 6. Core risks → mitigations
 
-### 2.3 Real-Time Isolation
+- **Render path does not scale** → profiling, dedicated renderer package, synthetic load tests.
+- **Main-thread overload / UI lag** → worker + façade, keep hot path out of NGXS.
+- **Weak backend contracts** → versioning, sequence numbers, snapshot + delta discipline.
+- **Weak observability / high MTTR** → pipeline metrics and traceability.
+- **Hidden coupling** → dependency map, ownership, governance.
+- **No recovery story** → RTO/RPO targets + snapshot-based resync.
 
-Separate:
+## 7. Delivery roadmap (aligned with PLAN.md cadence)
 
-- High-frequency telemetry (robot positions)
-- Low-frequency UI/application state
+**0** — Weeks 1–2: baseline, profiling, success metrics, draft RTO/RPO. **1** — Weeks 3–6: contract versioning, worker + façade, observability hooks. **2** — Weeks 7–11: dedicated renderer hardening/rollout. **3** — Weeks 12–15: resilience, recovery UX, second control-room flows. **4** — Weeks 16–18: load tests, customer-scale rehearsals. **5** — Weeks 19–20: hardening, rollback playbook, go-live readiness.
 
-**Implementation:**
+## 8. Business impact
 
-- Web Worker processes telemetry
-- Facade exposes minimal, stable API to Angular
-- Avoid pushing high-frequency updates into global state (NGXS)
+Observability lowers **MTTR**; dependency discipline cuts integration risk; snapshot/delta recovery reduces ambiguous state; performance budgets make behaviour legible to product and OEM conversations; RTO/RPO clarifies operational promises; feature flags support safer releases.
 
----
+## 9. Thesis
 
-### 2.4 Dedicated Rendering Pipeline
-
-Rendering must be:
-
-- Decoupled from Angular lifecycle
-- Optimized for moving entities
-
-**Techniques:**
-
-- Batching / instancing
-- Level of Detail (LOD)
-- Interpolation between frames
-- GPU-friendly updates
-
----
-
-### 2.5 Observability (First-Class Requirement)
-
-> “We cannot operate what we cannot observe.”
-
-Track the full pipeline:
+At this scale the dominant risks are **controlling change, observing the realtime stack, recovering safely, and keeping five teams from accumulating invisible coupling**—not the headline number of robots on the canvas alone.
