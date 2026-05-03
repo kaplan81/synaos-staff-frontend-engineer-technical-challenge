@@ -1,11 +1,13 @@
 # Synaos real-time operations dashboard — scaling design
 
-Design document for taking the existing platform from ~60 to ~300 robots on one shopfloor, three new vehicle types, and a second control-room workstation elsewhere, inside ~five months across five multidisciplinary product teams. Angular monorepo, Module Federation micro-frontends, shared design system, NGXS today, shopfloor WebGL map at ~30–37 FPS under current full load. Our stated assumptions are:
+Design document for taking the existing platform from ~60 to ~300 robots on one shopfloor, three new vehicle types, and a second control-room workstation elsewhere, inside ~five months across five multidisciplinary product teams. Angular monorepo, Module Federation micro-frontends, shared design system, NGXS today, shopfloor WebGL map at ~30–37 FPS under current full load.
 
-1. **Per-robot telemetry cadence is roughly 5–10 Hz ⇒ ~3k envelopes/sec worst case with 300 robots.** *If materially higher*: earlier backpressure/binary encoding decisions spike in urgency in Phase 0.
-2. **Backend-owning teammates can converge, via working group consensus, on a better websocket contract (deltas; viewport-awareness when achievable) within five months.** *If not*: Worker-side snapshot diffing buys UI-thread calm but leaves bandwidth pain — acceptance risk persists.
-3. **Modern Chromium plus integrated-or-better GPU is a contractual deployment baseline for workstations running the dashboard; we do not build legacy fallbacks.** *If breached*: contractual / facilities escalation, not a quiet engineering carve-out.
-4. **Industrial design produces GLB/textures for new vehicle archetypes roughly by Phase-rehearsal window.** *If late*: fleet 2D unaffected; lazy 3D remote slips visually.
+### Stated assumptions
+
+1. **Per-robot telemetry cadence is roughly 5–10 Hz ⇒ ~3k envelopes/sec worst case with 300 robots.** _If materially higher_: earlier backpressure/binary encoding decisions spike in urgency in Phase 0.
+2. **Backend-owning teammates can converge, via working group consensus, on a better websocket contract (deltas; viewport-awareness when achievable) within five months.** _If not_: Worker-side snapshot diffing buys UI-thread calm but leaves bandwidth pain — acceptance risk persists.
+3. **Modern Chromium plus integrated-or-better GPU is a contractual deployment baseline for workstations running the dashboard; we do not build legacy fallbacks.** _If breached_: contractual / facilities escalation, not a quiet engineering carve-out.
+4. **Industrial design produces GLB/textures for new vehicle archetypes roughly by Phase-rehearsal window.** _If late_: fleet 2D unaffected; lazy 3D remote slips visually.
 
 ## 1. Stakeholders and personas
 
@@ -17,17 +19,17 @@ Design document for taking the existing platform from ~60 to ~300 robots on one 
 
 ### Internal (builders / approvers)
 
-- **Five multidisciplinary product teams** — FE *and* BE ownership both slice across them; aligning contracts is symmetrical work to aligning canvas integrations.
+- **Five multidisciplinary product teams** — FE _and_ BE ownership both slice across them; aligning contracts is symmetrical work to aligning canvas integrations.
 - **Engineering leadership** — funds borrowed platform capacity plus blesses escalation paths (RFC, perf budgets).
 
 ### Conflicting pressures
 
-| Tension | How we adjudicate briefly |
-|--------|---------------------------|
-| Operator density vs. supervisor ornamentation | Density / LOD modes — never one global ornate style. |
-| Product roadmap throughput vs. platform spine | Transparent temporary haircut borrowed capacity funds. |
-| Autonomous squad backends vs. unified pipe | Working group negotiation **with** escalation hooks — not unmanaged local optima. |
-| OEM-visible flashy vs. foundational plumbing invisible | Tie invisible work explicitly to Sections 5 & rehearsal metrics. |
+| Tension                                                | How we adjudicate briefly                                                         |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| Operator density vs. supervisor ornamentation          | Density / LOD modes — never one global ornate style.                              |
+| Product roadmap throughput vs. platform spine          | Transparent temporary haircut borrowed capacity funds.                            |
+| Autonomous squad backends vs. unified pipe             | Working group negotiation **with** escalation hooks — not unmanaged local optima. |
+| OEM-visible flashy vs. foundational plumbing invisible | Tie invisible work explicitly to Sections 5 & rehearsal metrics.                  |
 
 ### Priority consequence at milestone
 
@@ -65,14 +67,14 @@ Unidirectional ideal:
 4. **`@synaos/realtime-canvas` (Pixi baseline)** listens to façade-computed narrowly scoped signals (viewport entity bucket, alarms, explicit selection pointer) + performs interpolation tiers for motion continuity.
 5. **NGXS** retains slower tenant / preference facets feeding façade rarely — not heartbeat dispatch amplification.
 
-*[NgRx Signal Store guide](https://ngrx.io/guide/signals/signal-store)*
+_[NgRx Signal Store guide](https://ngrx.io/guide/signals/signal-store)_
 
 ### 3.2 Comparative renderer choice (fleet 2D)
 
-| Option | Consideration |
-|-------|----------------|
-| **Pixi.js + batching (+ optional instancing pathways)** — **chosen default** | Mature sprites, straightforward LOD tiers, acceptable GPU discipline for factory-scale topologies. |
-| **deck.gl** | Strong when geospatial tiling stacks dominate platform — probably overshoot unless future geo overlays explode. |
+| Option                                                                       | Consideration                                                                                                   |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Pixi.js + batching (+ optional instancing pathways)** — **chosen default** | Mature sprites, straightforward LOD tiers, acceptable GPU discipline for factory-scale topologies.              |
+| **deck.gl**                                                                  | Strong when geospatial tiling stacks dominate platform — probably overshoot unless future geo overlays explode. |
 
 **Constraint:** no Three.js on multi-robot fleet canvas—2D only at fleet scale; 3D stays in the lazily loaded single-robot remote.
 
@@ -94,7 +96,7 @@ User gesture opens federated **`vehicle-detail-3d`**: simultaneous fetch of chun
 
 Maintain existing Module Federation remote boundaries (no mid-programme replatform of federation topology). Publish shared NPM workspaces above. Operational checklist coordinates semver / deploy choreography shell↔remote when canvases ripple — organisational hygiene, previously treated as tertiary risk consciously demoted beneath R1–R3.
 
-### 3.7 Intentionally *not* replatformed now
+### 3.7 Intentionally _not_ replatformed now
 
 - Wholesale NGXS disappearance
 - Redrawing federation graph wholesale
@@ -121,14 +123,14 @@ flowchart LR
 
 ## 4. Delivery & organisational strategy (≈20 weeks)
 
-| Phase | Window | Objective |
-|------|--------|------------|
-| **0** | W1–2 | Instrument + publish signed acceptance footprint + traffic capture hypotheses |
-| **1** | W3–6 | Versioned ingest path + façade behind flag + **first negotiated contract slices** |
-| **2** | W7–11 | `@synaos/realtime-canvas` shadow/canary rollout then progressive cut-over |
+| Phase | Window | Objective                                                                                                                   |
+| ----- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| **0** | W1–2   | Instrument + publish signed acceptance footprint + traffic capture hypotheses                                               |
+| **1** | W3–6   | Versioned ingest path + façade behind flag + **first negotiated contract slices**                                           |
+| **2** | W7–11  | `@synaos/realtime-canvas` shadow/canary rollout then progressive cut-over                                                   |
 | **3** | W12–15 | Second sanctioned machine flows + tenancy/auth hardening (one-map-per-workstation / duplicate-subscription regression hunt) |
-| **4** | W16–18 | Customer-scale rehearsals + fleet visual variants + lazy 3D remote when assets ripe |
-| **5** | W19–20 | Harden / freeze / playbook / escalation |
+| **4** | W16–18 | Customer-scale rehearsals + fleet visual variants + lazy 3D remote when assets ripe                                         |
+| **5** | W19–20 | Harden / freeze / playbook / escalation                                                                                     |
 
 ### Influencing mechanics (no-line-authority realism)
 
@@ -188,13 +190,13 @@ Check during **Phase 0** (cheap if early, expensive if late):
 
 ## Appendix — suggestion for a 60-minute defence walkthrough (~20 minutes content)
 
-| Minutes | Focus |
-|--------:|------|
-| 2 | Opening assumptions + rationale |
-| 4 | Persons + conflict table → binding priorities |
-| 5 | Risks R1–R3 (plain language emphasis on R3) |
-| 6 | Diagram + façade / canvas packages |
-| 3 | Timeline + borrowing / council |
-| ~2 | Trade-off recap: Section 5.1–5.4 headlines |
+| Minutes | Focus                                         |
+| ------: | --------------------------------------------- |
+|       2 | Opening assumptions + rationale               |
+|       4 | Persons + conflict table → binding priorities |
+|       5 | Risks R1–R3 (plain language emphasis on R3)   |
+|       6 | Diagram + façade / canvas packages            |
+|       3 | Timeline + borrowing / council                |
+|      ~2 | Trade-off recap: Section 5.1–5.4 headlines    |
 
 Prepared pivots: timeline halved aggressively; hypothetical OEM demands multi-robot live 3D; backend alignment stalls sharply; leadership declines borrowed platform capacity—each maps to phased fallback already documented (Worker diffing, postpone 3D scope, escalate contractually, lengthen risk span respectively).
