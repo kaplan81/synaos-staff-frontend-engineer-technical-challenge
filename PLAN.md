@@ -100,17 +100,15 @@ Roughly **five months** (~**20 weeks**): **ten two-week sprints** in a row. The 
 | **4** | **W15–18** — 4 weeks — **2** sprints | **Rehearse at full customer scale** with everyone in the room. **Polish how the three new vehicle types look** on the map. **Turn on optional 3D drill-in** when the 3D assets are actually ready — not before. |
 | **5** | **W19–20** — 2 weeks — **1** sprint | **Stop adding scope**, **freeze what “done” means** for go-live, write the **runbook and escalation path** for when things wobble, and **last hardening** before handover. |
 
-### Influencing mechanics (no-line-authority realism)
+### How we steer this without “owning” any team — and what to ask bosses for
 
-**Real-time platform council** — each shipping squad designates a standing engineer + rotates backend delegate when payloads discussed; Staff FE facilitates; RFC-lite backlog for façade + schema edges.
+**Keep a small standing group for realtime topics.** Each product team names one engineer who joins when we touch live data shapes or payloads. When the discussion is mainly about backend messages, a backend person rotates in too. Staff FE chairs the rhythm and keeps a short shared list of decisions (what changed on the wire, what changed in shared UI packages). Nobody needs a fancy title—the point is predictable faces so the same conversation does not restart every sprint.
 
-**Numeric perf thresholds** surfaced in CI for shared artefacts (frame regressions envelope, ingest→present tail markers, websocket volume budgets).
+**Make a few numbers part of CI for shared pieces** — nothing exotic: frames for the demos we care about, typical delay from message to pixels on screen, rough websocket traffic. When those slip, teams see it before a review surprises everyone.
 
-### Leadership requests
+**Ask leadership upfront for borrowed people and protected time.** About **three** engineers for roughly **half to three-quarters of their week**, **plus Staff FE**, **for almost all five months** — written into steering and roadmaps, not squeezed in as overtime. Say clearly which roadmap items pause and until when. When the crunch ends, either wrap the group cleanly or consciously turn it into a small ongoing platform mandate.
 
-Borrow ~**three** engineers at **½–¾** concurrent focus **plus Staff** for five calendar months → explicit carve-out from roadmap promises—not implicit heroics. Afterwards either dissolve consciously or elevate formal platform mandate.
-
-Messaging to PM partners: transient velocity dip consciously purchases **singular** rehearsal reliability vs. probabilistic multiplicity of canvases diverging dangerously.
+**Straight talk for PMs.** The plan means **less other product throughput for a stretch** versus “every squad just keeps sprinting.” In exchange we chase **one honest, repeatable customer rehearsal** shared by operators and OEM — instead of drifting toward slightly different realtime maps nobody can jointly sign.
 
 ## 5. Trade-offs & business framing
 
