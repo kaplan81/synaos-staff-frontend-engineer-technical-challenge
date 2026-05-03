@@ -57,15 +57,15 @@ Without a signed rehearsal layout and a leaner realtime contract, teams **improv
 
 ## 3. Architectural approach
 
-The fleet path is one **left-to-right pipeline** (realtime gateway → worker → **`@synaos/telemetry-stream`** → **`@synaos/realtime-canvas`** and other UI). The subsections below walk **each node in that order**; the **reference diagram at the end** gathers the same shapes for orientation.
+The fleet path is one **left-to-right pipeline** (realtime gateway → worker → **`@synaos/telemetry-stream`** → **`@synaos/realtime-canvas`** and other UI). **Transport:** the dashboard opens a **WebSocket** to the backend; **`realtime gateway` means that backend edge**—the tier that terminates the socket, shapes messages (deltas, subscriptions), and reconnect semantics—not the browser itself. The subsections below walk **each node in that order**; the **reference diagram at the end** gathers the same shapes for orientation.
 
 ### 3.1 Walking the pipeline (each box, in diagram order)
 
-1. **Realtime gateway** — Versions and shapes outbound traffic: **deltas** first; **viewport-narrow** subscriptions when backend squads converge. Add sequencing, compaction for slow clients, authoritative **resync** after gaps, and—only if profiling proves it—**binary** payloads instead of assuming JSON is the choke.
+1. **Realtime gateway (backend WebSocket edge)** — The service layer clients actually talk to over **WebSocket** (today’s baseline in the scenario). It **versions** and **shapes** outbound traffic: **deltas** first; **viewport-narrow** subscriptions when backend squads converge. Responsibilities extend to sequencing, compaction for slow clients, authoritative **resync** after gaps, and—only if profiling proves it—**binary** payloads instead of assuming JSON is the choke. *(Other realtime transports later could sit behind the same logical role; WebSocket remains the contractual path for this programme.)*
 
 2. **Telemetry Web Worker** — Parses and normalises **off** the Angular main thread so interaction and layout keep their frame budget during bursts.
 
-3. **`@synaos/telemetry-stream`** — Owns the bridge from Worker into app state: websocket lifecycle, merged entity map, **NgRx Signal Store** as the realtime façade ([Signal Store guide](https://ngrx.io/guide/signals/signal-store)), **equality-guarded** updates so no-op logical states do not ripple consumers, and **narrow `computed` outputs** (viewport slice, alarms, selection, …). If schedule compresses, ship the **same outward API** via `Injectable` + `signal()` first; swap in Signal Store without touching map consumers.
+3. **`@synaos/telemetry-stream`** — Owns **the browser side** of the connection: websocket client session, hand-off to Worker, merged entity map, **NgRx Signal Store** as the realtime façade ([Signal Store guide](https://ngrx.io/guide/signals/signal-store)), **equality-guarded** updates so no-op logical states do not ripple consumers, and **narrow `computed` outputs** (viewport slice, alarms, selection, …). If schedule compresses, ship the **same outward API** via `Injectable` + `signal()` first; swap in Signal Store without touching map consumers.
 
 4. **NGXS (non-hot slices)** — Session, tenancy, slower preferences. **Rare**, explicit merges into the realtime façade—never a per-tick motorway into the fleet map.
 
@@ -85,7 +85,7 @@ The fleet path is one **left-to-right pipeline** (realtime gateway → worker �
 
 ```mermaid
 flowchart LR
-  Gateway[Realtime gateway]
+  Gateway["Realtime gateway (WebSocket server edge)"]
   Worker[Telemetry Web Worker]
   TelemetryPkg["@synaos/telemetry-stream"]
   NGXS[NGXS non-hot slices]
