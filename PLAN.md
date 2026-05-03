@@ -26,7 +26,7 @@ Design document for taking the existing platform from ~60 to ~300 robots on one 
 
 | Tension                                                | How we adjudicate briefly                                                         |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------- |
-| Operator density vs. supervisor ornamentation          | Density / LOD modes — never one global ornate style.                              |
+| Operator density vs. supervisor ornamentation          | Density / **LOD (level of detail)** modes — never one global ornate style.                              |
 | Product roadmap throughput vs. platform spine          | Transparent temporary haircut borrowed capacity funds.                            |
 | Autonomous squad backends vs. unified pipe             | Working group negotiation **with** escalation hooks — not unmanaged local optima. |
 | OEM-visible flashy vs. foundational plumbing invisible | Tie invisible work explicitly to Sections 5 & rehearsal metrics.                  |
