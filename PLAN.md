@@ -37,23 +37,23 @@ Operators plus OEM-visible acceptance outweigh supervisor ornament **if calendar
 
 ## 2. Technical assessment — three core risks
 
-### R1 — Map rendering fails to scale cleanly to nominal fleet enumeration
+### R1 — The fleet map may not stay smooth at ~300 robots
 
-Modern WebGL fleets rarely scale linearly; batching debt, allocations, GPU upload storms, coarse hit-testing, and per-frame micro-animation choices compound. Measurement before rewrite anchors Phase 2 investment in **`@synaos/realtime-canvas`**.
+Cost does not rise gently with headcount: how we draw, allocate memory, and animate all stacks up. **Profile before a big rewrite**; Phase 2 money goes to **`@synaos/realtime-canvas`** only once we know where time is spent.
 
-**Mitigations:** profiler-led Phase 0; batched sprites / instancing where needed; LOD by zoom; interpolation between telemetry ticks.
+**Mitigations:** Phase 0 profiling; batched sprites / instancing where it helps; simpler visuals when zoomed out (LOD by zoom); interpolate between position ticks so motion stays calm.
 
-### R2 — Angular / NGXS main thread saturates independent of eventual GPU slack
+### R2 — Clicks and scrolling can lag even when the GPU has spare capacity
 
-Flooding NGXS selectors with high-frequency deltas starves scrolling and policing interactions even if GPUs idle. Isolate ingest + merging + memoised façade (Section 3) off the NGXS hot path feeding map consumers.
+Shipping every robot update through NGXS can clog the main browser thread while the graphics chip is barely working. Heavy ingest and merge should live **off** that path, with a small stable view model feeding the map (Section 3).
 
-**Mitigations:** **`@synaos/telemetry-stream`** worker bridge plus NgRx Signal Store façade exposing narrow computed surfaces.
+**Mitigations:** **`@synaos/telemetry-stream`** Web Worker plus NgRx Signal Store façade that exposes only what the map and panels need.
 
-### R3 — “What travels on the pipe” × “Which machines concurrently watch” both underspecified
+### R3 — We still lack a shared picture of payload size and who watches from where
 
-Friendly framing: absent a signed rehearsal topology plus an aligned contract, teams **guess** topology (duplicate tabs, unknowingly mirrored subscriptions) while still shipping fat JSON snapshots — cumulative acceptance fragility, not one missing `if`.
+Without a signed rehearsal layout and a leaner realtime contract, teams **improvise**—duplicate tabs, mirrored subscriptions, huge JSON blobs. OEM acceptance frays in lots of small ways, not one missing branch.
 
-**Mitigations:** sprint-1 written acceptance diagram (machine topology: one heavyweight live map per workstation, second sanctioned view on separate hardware); phased protocol work (deltas, viewport narrowing when aligned, recovery snapshots); honest Worker-diff fallback without pretending bandwidth disappears overnight.
+**Mitigations:** Week-one written acceptance diagram (one heavy live map per workstation, control room on separate hardware); phased protocol work (deltas, viewport narrowing when backend can, recovery snapshots); Worker-side diffing as an honest interim if the wire stays fat.
 
 ## 3. Architectural approach
 
