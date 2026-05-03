@@ -87,6 +87,16 @@ flowchart LR
   TelemetryPkg -->|"narrow computed façade"| CanvasPkg
 ```
 
+### 3.3 Operational observability: what to watch, from the server to the screen
+
+**Core metrics:** how long an update takes to become a visible move; how smooth the picture is (frame timing, not just a gut feel); whether memory creeps upward over a long shift; how much work is waiting inside the background worker; whether updates are being dropped or replayed out of order; how many robots look “older” than agreed thresholds; how often the live connection drops and recovers; and which **data contract version** and **feature flags** a given session is actually running—so problems can be reproduced and rollouts stay deliberate.
+
+### 3.4 When the live feed falters: recovery, and what operators see
+
+Phase 0 pins **draft recovery targets** with product and ops, then **validates** them under rehearsal (numbers are starting points, not marketing). Ballpark: **on the order of minutes** before leadership would call the wall trustworthy again after a major failure; **tens of seconds** to **reconnect and catch up** after a dropped live browser connection; anything **without a fresh update for a few seconds** is labelled **stale** instead of looking “fine” by silence.
+
+After a gap: the edge sends one **authoritative full-floor snapshot**, then **small increments from a known sequence**. When things are shaky, the UI keeps **last-known positions with timestamps**, **visible staleness**, and a **brief health line**; the primary wall map stays the focus and the operator can tell **live**, **late**, or **down**.
+
 ## 4. Delivery & organisational strategy (~20 weeks)
 
 Roughly **five months** (~**20 weeks**): **ten two-week sprints** in a row. The phases below are **only full 2-week sprints** — no half-week or “spillover” buckets — so planning, capacity, and demos stay on a normal sprint cadence.
