@@ -110,34 +110,34 @@ Roughly **five months** (~**20 weeks**): **ten two-week sprints** in a row. The 
 
 **For PMs:** A **stretch of quieter delivery on neighbouring roadmap rows** buys **one shared, rehearsed experience** OEM and operators can jointly stand behind—not five drifting maps.
 
-## 5. Trade-offs & business framing
+## 5. Trade-offs & business framing — plain language
 
-Three engineering choices merit executive translation—operators feel them, purchasers rehearse against them, roadmaps bleed for them briefly.
+Three big bets keep coming up: what we ship over the live connection, whether everyone shares one map codebase, and whether squads carve out steady time together. Operators feel the first two on the floor; leadership feels the calendar on the third. Here they are without the fluff.
 
-### 5.1 Smaller, sharper realtime payloads (ideal: deltas + progressive viewport narrowing)
+### 5.1 Send less chatty data over the live feed (fewer repeats, tighter “what you actually see”)
 
-**Improves** sustainable operator truth + OEM zoom exercises + cheaper reconnect behaviours.
+**Why we want it.** Operators notice lag and jitter first. Sending **incremental updates** instead of dumping the whole world every time (**deltas**), and narrowing what travels to roughly **what’s on screen** (**viewports**), keeps dashboards honest during busy shifts and reconnects smoother.
 
-**Costs** disciplined multi-team schema negotiation—not a covert weekend patch.
+**What it costs.** Real agreement across frontend and backend—not a stealth Friday fix. Naming fields, versioning, agreeing who breaks what matters.
 
-**If deferred** Acceptance brittleness; Worker smoothing ≠ bandwidth cure → commercial hinge risk concentrates.
+**If we postpone.** The UI tricks we ship can mask clunkiness for a bit, but if the hose stays fat forever, rehearsals with the OEM still choke at the worst time—risk lands on acceptance day, not a Tuesday dev environment.
 
-### 5.2 One fleet renderer package `@synaos/realtime-canvas`
+### 5.2 One shared fleet-map package (`@synaos/realtime-canvas`) instead of each squad inventing its own canvas
 
-**Improves** unified tuning for density/LOD/smoothing—fewer stochastic perf cliffs.
+**Why we want it.** One place tunes “how crowded looks good,” smoothing, zoom levels—you learn one performance story instead of chasing five drifting copies.
 
-**Costs** deliberate CODEOWNERS / RFC drag on narrowly local flashy ideas.
+**What it costs.** Shared ownership and change review: flashy one-off tweaks become a short conversation across teams first.
 
-**If deferred** Divergent canvases → inconsistent rehearsal arcs → politically expensive late unify.
+**If we postpone.** Every squad ships “their map.” Customer rehearsals contradict each other. Unifying later hurts feelings, schedules, and the demo.
 
-### 5.3 Borrowed squad capacity for a working group + lightweight forums + CI guardrails
+### 5.3 Borrowed squad time for a coordination working group, regular catch-ups, and simple automated sanity checks on shared bits
 
-**Improves** calendar honesty—work visible, measured, debated with data signals.
+**Why we want it.** Everyone sees the same numbers; arguments shrink; surprises land in CI, not in front of a buyer.
 
-**Costs** Fractional time from home squads feeding a **coordination working group** (not a standalone team) + leadership visibly backing purposeful roadmap sacrifice.
+**What it costs.** Real hours off squads’ product backlogs, plus leaders saying out loud that some roadmap lines wait.
 
-**If deferred** Implicit integration debt avalanche into final rehearsals before contractual demo.
+**If we postpone.** Integrations stack up invisibly and pop open right before the contractual rehearsal—classic “we thought we were done.”
 
-### 5.4 One sentence for leadership
+### 5.4 One line for leadership
 
-Invest simultaneously in pipe shape **and** shared canvas mechanics **and** temporary funded alignment—or risk paying all three costs later under OEM spotlight.
+Back the **smarter live feed**, the **shared map engine**, and the **borrowed working-group time** together—or expect to pay for all three problems at once, late, with the customer watching.
