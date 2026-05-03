@@ -112,32 +112,10 @@ Roughly **five months** (~**20 weeks**): **ten two-week sprints** in a row. The 
 
 ## 5. Trade-offs & business framing — plain language
 
-Three big bets keep coming up: what we ship over the live connection, whether everyone shares one map codebase, and whether squads carve out steady time together. Operators feel the first two on the floor; leadership feels the calendar on the third. Here they are without the fluff.
+**5.1 Leaner live traffic (deltas + viewports).** **Upside:** smoother busy shifts, clearer map, easier reconnects. **Cost:** real FE/BE agreement—no surprise Friday patch. **If we skip:** front-end tricks buy time, but a fat feed still bites on **OEM rehearsal / acceptance day.**
 
-### 5.1 Send less chatty data over the live feed (fewer repeats, tighter “what you actually see”)
+**5.2 One fleet map in `@synaos/realtime-canvas`.** **Upside:** one place for density, smoothing, zoom—one performance story. **Cost:** shared change process; local “wow” needs a quick cross-team chat first. **If we skip:** diverging maps and rehearsing against different truths; painful late merge.
 
-**Why we want it.** Operators notice lag and jitter first. Sending **incremental updates** instead of dumping the whole world every time (**deltas**), and narrowing what travels to roughly **what’s on screen** (**viewports**), keeps dashboards honest during busy shifts and reconnects smoother.
+**5.3 Borrowed working-group time + light forums + CI on shared code.** **Upside:** shared numbers, smaller arguments, fewer blindsides. **Cost:** real hours off squad backlogs; leadership must **name** delayed roadmap lines. **If we skip:** hidden integration pain right before the contractual run-through.
 
-**What it costs.** Real agreement across frontend and backend—not a stealth Friday fix. Naming fields, versioning, agreeing who breaks what matters.
-
-**If we postpone.** The UI tricks we ship can mask clunkiness for a bit, but if the hose stays fat forever, rehearsals with the OEM still choke at the worst time—risk lands on acceptance day, not a Tuesday dev environment.
-
-### 5.2 One shared fleet-map package (`@synaos/realtime-canvas`) instead of each squad inventing its own canvas
-
-**Why we want it.** One place tunes “how crowded looks good,” smoothing, zoom levels—you learn one performance story instead of chasing five drifting copies.
-
-**What it costs.** Shared ownership and change review: flashy one-off tweaks become a short conversation across teams first.
-
-**If we postpone.** Every squad ships “their map.” Customer rehearsals contradict each other. Unifying later hurts feelings, schedules, and the demo.
-
-### 5.3 Borrowed squad time for a coordination working group, regular catch-ups, and simple automated sanity checks on shared bits
-
-**Why we want it.** Everyone sees the same numbers; arguments shrink; surprises land in CI, not in front of a buyer.
-
-**What it costs.** Real hours off squads’ product backlogs, plus leaders saying out loud that some roadmap lines wait.
-
-**If we postpone.** Integrations stack up invisibly and pop open right before the contractual rehearsal—classic “we thought we were done.”
-
-### 5.4 One line for leadership
-
-Back the **smarter live feed**, the **shared map engine**, and the **borrowed working-group time** together—or expect to pay for all three problems at once, late, with the customer watching.
+**5.4 Leadership in one line.** Fund **smarter wire + shared map engine + borrowed coordination** together—or absorb all three misses at once, late, in front of the customer.
