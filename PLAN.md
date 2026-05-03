@@ -120,4 +120,4 @@ A trade-off means **giving up something tempting** because the alternative fails
 
 **5.3 Working-group borrowed time versus “stay in your sprint lane.”** Donating fractional heads to rhythm + CI on shared artefacts trades **straight-line feature throughput** today for fewer cross-squad explosions later. Saving those hours postpones clashes—**risk moves** toward the rehearsal window rather than disappearing.
 
-**5.4 Leaders decide together.** Fund **contract discipline on the wire**, **one shared map engine**, **and borrowed coordination as a unit**—or expect to swallow all three gaps when the runway is gone.
+That borrowed time mainly **helps** once we are also doing **5.1** (disciplined wire) and **5.2** (one shared map engine); coordination without contract and renderer alignment still concentrates pain late. **Leaders:** treat **all three rows as one budget decision**—or expect the same rehearsal-week crunch from whichever piece was skipped.
