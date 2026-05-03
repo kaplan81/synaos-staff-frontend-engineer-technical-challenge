@@ -45,9 +45,9 @@ Cost does not rise gently with headcount: how we draw, allocate memory, and anim
 
 ### R2 — Clicks and scrolling can lag from state churn on the main thread
 
-Shipping every robot update through NGXS can clog that thread long before the fleet canvas becomes the bottleneck. Heavy ingest and merge should live **off** that path, with a small stable view model feeding the map (Section 3).
+Shipping every robot update through NGXS can clog that thread long before the fleet canvas becomes the bottleneck. Heavy ingest and merge should live **off** that path, with a small stable view model feeding consumers of the realtime façade (Section 3).
 
-**Mitigations:** **`@synaos/telemetry-stream`** Web Worker plus NgRx Signal Store façade that exposes only what the map and panels need.
+**Mitigations:** **`@synaos/telemetry-stream`** Web Worker plus NgRx Signal Store façade that exposes only narrow **computed** outputs the hot path needs.
 
 ### R3 — We still lack a shared picture of payload size and who watches from where
 
@@ -57,7 +57,7 @@ Without a signed rehearsal layout and a leaner realtime contract, teams **improv
 
 ## 3. Architectural approach
 
-The fleet path is one **left-to-right pipeline** (realtime gateway → worker → **`@synaos/telemetry-stream`** → **`@synaos/realtime-canvas`** and other UI). **Transport:** the dashboard opens a **WebSocket** to the backend; **`realtime gateway` means that backend edge**—the tier that terminates the socket, shapes messages (deltas, subscriptions), and reconnect semantics—not the browser itself. The subsections below walk **each node in that order**; the **reference diagram at the end** gathers the same shapes for orientation.
+The fleet path is one **left-to-right data pipeline** (realtime gateway → worker → **`@synaos/telemetry-stream`** → **`@synaos/realtime-canvas`**). **Transport:** the dashboard opens a **WebSocket** to the backend; **`realtime gateway` means that backend edge**—the tier that terminates the socket, shapes messages (deltas, subscriptions), and reconnect semantics—not the browser itself. The subsections below walk **each node in that order**; the **reference diagram at the end** gathers the same shapes for orientation.
 
 ### 3.1 Walking the pipeline (each box, in diagram order)
 
@@ -65,23 +65,13 @@ The fleet path is one **left-to-right pipeline** (realtime gateway → worker �
 
 2. **Telemetry Web Worker** — Parses and normalises **off** the Angular main thread so interaction and layout keep their frame budget during bursts.
 
-3. **`@synaos/telemetry-stream`** — Owns **the browser side** of the connection: websocket client session, hand-off to Worker, merged entity map, **NgRx Signal Store** as the realtime façade ([Signal Store guide](https://ngrx.io/guide/signals/signal-store)), **equality-guarded** updates so no-op logical states do not ripple consumers, and **narrow `computed` outputs** (viewport slice, alarms, selection, …). **Signals memoize behaviour:** writable signals and `computed` only propagate when the new value is **unequal** to the previous one (by default, **referential equality** for objects)—so downstream subscribers skip work when nothing changed; we still apply **explicit per-robot merge predicates** before writing so we do not rebuild object graphs every tick anyway. If schedule compresses, ship the **same outward API** via `Injectable` + `signal()` first; swap in Signal Store without touching map consumers.
+3. **`@synaos/telemetry-stream`** — Owns **the browser side** of the connection: websocket client session, hand-off to Worker, merged entity map, **NgRx Signal Store** as the realtime façade ([Signal Store guide](https://ngrx.io/guide/signals/signal-store)), **equality-guarded** updates so no-op logical states do not ripple consumers, and **narrow `computed` outputs** (viewport slice, alarms, selection, …). **Signals memoize behaviour:** writable signals and `computed` only propagate when the new value is **unequal** to the previous one (by default, **referential equality** for objects)—so downstream subscribers skip work when nothing changed; we still apply **explicit per-robot merge predicates** before writing so we do not rebuild object graphs every tick anyway. **Single-robot 3D** is **not** drawn on the diagram: drill-in loads a **lazy Module Federation** remote (Three.js + CDN `.glb`) that still **reads the same façade** for the selected entity—no second WebSocket or duplicate fleet ingest; it is omitted here so the figure stays about **bulk telemetry → fleet canvas** only. If schedule compresses, ship the **same outward API** via `Injectable` + `signal()` first; swap in Signal Store without touching map consumers.
 
 4. **NGXS (non-hot slices)** — Session, tenancy, slower preferences. **Rare**, explicit merges into the realtime façade—never a per-tick motorway into the fleet map.
 
-5. **`@synaos/realtime-canvas`** — Reads only façade-driven signals. Default **Pixi.js** (batched sprites, zoom **LOD**). **Interpolation runs in the render loop** between sparse telemetry ticks. The **fleet map stays 2D-only**—Three.js appears only on the lazily loaded **single-robot** 3D remote (outside the main pipeline diagram). **deck.gl** only if the product later **centres** on heavy geo tiling.
+5. **`@synaos/realtime-canvas`** — Reads only façade-driven signals. Default **Pixi.js** (batched sprites, zoom **LOD**). **Interpolation runs in the render loop** between sparse telemetry ticks. The **fleet map stays 2D-only**; Three.js lives in the lazy single-robot remote described in (3). **deck.gl** only if the product later **centres** on heavy geo tiling.
 
-6. **Operators workstation** — **One** heavyweight live fleet canvas per workstation (we deliberately avoid two simultaneous live canvases on the **same** machine); the second control room runs on **different** hardware with its own client.
-
-7. **Feature satellite panels** — Other MFE chrome (alarms, supervisory widgets) consumes the **same façade**—no duplicate websocket parsing or noisy NGXS selectors for motion.
-
-### 3.2 Outside the main diagram
-
-- **Single-robot 3D** — Lazy federated remote (Three.js bundle + CDN `.glb`) on drill-in; fleet map boxes above stay 2D-only.
-- **Federation** — Remote boundaries unchanged; **`@synaos/*`** as shared workspaces; semver / deploy-order checklist when shell and remotes drift.
-- **Postponed** wholesale NGXS removal, replatforming federation for its own sake, **multi-robot live 3D**.
-
-### 3.3 Reference diagram (clarifying summary)
+### 3.2 Reference diagram (clarifying summary)
 
 ```mermaid
 flowchart LR
@@ -90,14 +80,11 @@ flowchart LR
   TelemetryPkg["@synaos/telemetry-stream"]
   NGXS[NGXS non-hot slices]
   CanvasPkg["@synaos/realtime-canvas Pixi fleet view"]
-  OperatorWS[Operators workstation]
 
   Gateway -->|"deltas_goal"| Worker
   Worker -->|"normalised merges"| TelemetryPkg
   NGXS -. "rare context merges" .-> TelemetryPkg
   TelemetryPkg -->|"narrow computed façade"| CanvasPkg
-  CanvasPkg --> OperatorWS
-  TelemetryPkg --> AlarmPanels[Feature satellite panels]
 ```
 
 ## 4. Delivery & organisational strategy (≈20 weeks)
