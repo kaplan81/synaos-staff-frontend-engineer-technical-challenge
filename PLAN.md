@@ -43,9 +43,9 @@ Cost does not rise gently with headcount: how we draw, allocate memory, and anim
 
 **Mitigations:** Phase 0 profiling; batched sprites / instancing where it helps; simpler visuals when zoomed out (LOD by zoom); interpolate between position ticks so motion stays calm.
 
-### R2 — Clicks and scrolling can lag even when the GPU has spare capacity
+### R2 — Clicks and scrolling can lag from state churn on the main thread
 
-Shipping every robot update through NGXS can clog the main browser thread while the graphics chip is barely working. Heavy ingest and merge should live **off** that path, with a small stable view model feeding the map (Section 3).
+Shipping every robot update through NGXS can clog that thread long before the fleet canvas becomes the bottleneck. Heavy ingest and merge should live **off** that path, with a small stable view model feeding the map (Section 3).
 
 **Mitigations:** **`@synaos/telemetry-stream`** Web Worker plus NgRx Signal Store façade that exposes only what the map and panels need.
 
