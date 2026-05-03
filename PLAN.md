@@ -1,4 +1,4 @@
-# Synaos real-time operations dashboard — scaling design
+# Synaos Real-time Operations Dashboard — Scaling Design
 
 Design document for taking the existing platform from ~60 to ~300 robots on one shopfloor, three new vehicle types, and a second control-room workstation elsewhere, inside ~five months across five multidisciplinary product teams. Angular monorepo, Module Federation micro-frontends, shared design system, NGXS today, shopfloor WebGL map at ~30–37 FPS under current full load.
 
