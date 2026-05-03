@@ -10,15 +10,6 @@ The dashboard must absorb a fivefold increase in moving entities on one shopfloo
 
 The document intentionally names unknowns and ties evidence to Phase 0 work rather than inventing certainty.
 
-### Stated design constraints
-
-These bounds scope engineering and product rehearsal for this window:
-
-- **C1. 3D only for single-robot inspection.** Any view containing more than one robot stays **2D**. Optional 3D is a lazily federated remote that loads Three.js **on demand**. Protects fleet-map performance budgets.
-- **C2. Module Federation topology stays.** We do **not** replatform federation boundaries mid-programme — only introduce shared packages beneath them where agreed.
-- **C3. Extend the shared design system; do not replace it.**
-- **C4. One live fleet map surface per workstation.** We **avoid** deliberately running two heavyweight live canvases **on one PC**. The sanctioned second view is another **physical machine**. We still engineer against accidental duplicate tabs/subscriptions.
-
 ### Stated assumptions (each falsifiable)
 
 1. **Per-robot telemetry cadence is roughly 5–10 Hz ⇒ ~3k envelopes/sec worst case with 300 robots.** *If materially higher*: earlier backpressure/binary encoding decisions spike in urgency in Phase 0.
@@ -32,7 +23,7 @@ These bounds scope engineering and product rehearsal for this window:
 
 ### External (people using or signing)
 
-- **Control-room operator (remote building).** Wall overview; maximal density tolerance; jitter and stalled alarms undermine trust fastest. Satisfying **C4**, their canonical heavy client is distinct hardware from adjacent supervisor desks—not two maps duelling on one GPU.
+- **Control-room operator (remote building).** Wall overview; maximal density tolerance; jitter and stalled alarms undermine trust fastest. Their canonical heavy client is distinct hardware from adjacent supervisor desks—not two maps duelling on one GPU.
 - **Floor supervisor.** Richer contextual drilldown on smaller subsets of robots matters more than total fleet pixel density.
 - **OEM purchaser / acceptance audience.** Acceptance criteria remain **behaviour seen under load**: sustained smooth motion at nominal scale plus **authorised second workstation** behaving identically—not architecture slide decks.
 
@@ -74,7 +65,7 @@ Flooding NGXS selectors with high-frequency deltas starves scrolling and policin
 
 Friendly framing: absent a signed rehearsal topology plus an aligned contract, teams **guess** topology (duplicate tabs, unknowingly mirrored subscriptions) while still shipping fat JSON snapshots — cumulative acceptance fragility, not one missing `if`.
 
-**Mitigations:** sprint-1 written acceptance diagram (machine count aligning **C4**); phased protocol work (deltas, viewport narrowing when aligned, recovery snapshots); honest Worker-diff fallback without pretending bandwidth disappears overnight.
+**Mitigations:** sprint-1 written acceptance diagram (machine topology: one heavyweight live map per workstation, second sanctioned view on separate hardware); phased protocol work (deltas, viewport narrowing when aligned, recovery snapshots); honest Worker-diff fallback without pretending bandwidth disappears overnight.
 
 ---
 
@@ -99,7 +90,7 @@ Unidirectional ideal:
 | **Pixi.js + batching (+ optional instancing pathways)** — **chosen default** | Mature sprites, straightforward LOD tiers, acceptable GPU discipline for factory-scale topologies. |
 | **deck.gl** | Strong when geospatial tiling stacks dominate platform — probably overshoot unless future geo overlays explode. |
 
-**Constraint:** forbid Three on multi-robot canvas per **C1**.
+**Constraint:** no Three.js on multi-robot fleet canvas—2D only at fleet scale; 3D stays in the lazily loaded single-robot remote.
 
 ### 3.3 Interaction with backend collaborators
 
@@ -117,7 +108,7 @@ User gesture opens federated **`vehicle-detail-3d`**: simultaneous fetch of chun
 
 ### 3.6 Federation & delivery hygiene
 
-Maintain existing remote boundaries (**C2**). Publish shared NPM workspaces above. Operational checklist coordinates semver / deploy choreography shell↔remote when canvases ripple — organisational hygiene, previously treated as tertiary risk consciously demoted beneath R1–R3.
+Maintain existing Module Federation remote boundaries (no mid-programme replatform of federation topology). Publish shared NPM workspaces above. Operational checklist coordinates semver / deploy choreography shell↔remote when canvases ripple — organisational hygiene, previously treated as tertiary risk consciously demoted beneath R1–R3.
 
 ### 3.7 Intentionally *not* replatformed now
 
@@ -153,7 +144,7 @@ flowchart LR
 | **0** | W1–2 | Instrument + publish signed acceptance footprint + traffic capture hypotheses |
 | **1** | W3–6 | Versioned ingest path + façade behind flag + **first negotiated contract slices** |
 | **2** | W7–11 | `@synaos/realtime-canvas` shadow/canary rollout then progressive cut-over |
-| **3** | W12–15 | Second sanctioned machine flows + tenancy/auth hardening (**C4** regression hunt) |
+| **3** | W12–15 | Second sanctioned machine flows + tenancy/auth hardening (one-map-per-workstation / duplicate-subscription regression hunt) |
 | **4** | W16–18 | Customer-scale rehearsals + fleet visual variants + lazy 3D remote when assets ripe |
 | **5** | W19–20 | Harden / freeze / playbook / escalation |
 
@@ -211,7 +202,7 @@ Check during **Phase 0** (cheap if early, expensive if late):
 
 1. Profiler-first dominant bottleneck attribution (GPU vs worker vs Angular main-thread budget).
 2. Captured websocket size / frequency empirical histograms—not assumed.
-3. Written OEM rehearsal script, signed off, aligning **C4** machine choreography.
+3. Written OEM rehearsal script, signed off, aligning accepted machine choreography (one heavy map per PC, control-room on separate hardware).
 4. Gateway squads **appetite** scorecard for deltas / viewport narrowing vs. phased compromise path.
 5. Industrial model pipeline checkpoints for lazily-loaded 3D remote.
 6. Contractual workstation hardware attestation on file (per assumption 3 in Section 0).
@@ -223,7 +214,7 @@ Check during **Phase 0** (cheap if early, expensive if late):
 
 | Minutes | Focus |
 |--------:|------|
-| 2 | Constraints C1–C4 + assumptions rationale |
+| 2 | Section 0 context + falsifiable assumptions |
 | 4 | Persons + conflict table → binding priorities |
 | 5 | Risks R1–R3 (plain language emphasis on R3) |
 | 6 | Diagram + façade / canvas packages |
