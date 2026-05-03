@@ -106,7 +106,7 @@ Roughly **five months** (~**20 weeks**): **ten two-week sprints** in a row. The 
 
 **Cheap automated checks** on shared code—frames, lag from message to screen, websocket load—so slips show up before big reviews.
 
-**What leadership funds:** Roughly **three** engineers at **about half–three-quarters of their week**, **plus Staff FE**, for **almost the whole programme**, as **planned roadmap pauses**, not unpaid heroics—then retire this setup consciously or shrink it into a small ongoing platform posture.
+**What leadership funds:** **Borrow** roughly **three** engineers at **about half–three-quarters of their usual squad capacity**, **plus Staff FE**, for **almost the whole programme** — as **planned roadmap pauses**, not unpaid heroics. They convene as a **coordination-focused working group**, **not** a spun-out engineering team: each person **stays in their squad**, keeps **those squads in the loop**, and aligns what the working group commits to with **home squad** sprint plans. If the groove sticks after go-live prep, elevate the same posture into an explicit **platform working group**; otherwise wind it down on purpose.
 
 **For PMs:** A **stretch of quieter delivery on neighbouring roadmap rows** buys **one shared, rehearsed experience** OEM and operators can jointly stand behind—not five drifting maps.
 
@@ -130,11 +130,11 @@ Three engineering choices merit executive translation—operators feel them, pur
 
 **If deferred** Divergent canvases → inconsistent rehearsal arcs → politically expensive late unify.
 
-### 5.3 Borrowed platform bandwidth + councils + thresholds
+### 5.3 Borrowed squad capacity for a working group + lightweight forums + CI guardrails
 
 **Improves** calendar honesty—work visible, measured, debated with data signals.
 
-**Costs** Borrowed fractional heads + verbal leadership defence of purposeful roadmap sacrifice.
+**Costs** Fractional time from home squads feeding a **coordination working group** (not a standalone team) + leadership visibly backing purposeful roadmap sacrifice.
 
 **If deferred** Implicit integration debt avalanche into final rehearsals before contractual demo.
 
