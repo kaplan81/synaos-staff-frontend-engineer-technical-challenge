@@ -110,12 +110,14 @@ Roughly **five months** (~**20 weeks**): **ten two-week sprints** in a row. The 
 
 **For PMs:** A **stretch of quieter delivery on neighbouring roadmap rows** buys **one shared, rehearsed experience** OEM and operators can jointly stand behind—not five drifting maps.
 
-## 5. Trade-offs & business framing — plain language
+## 5. Trade-offs & business framing
 
-**5.1 Leaner live traffic (deltas + viewports).** **Upside:** smoother busy shifts, clearer map, easier reconnects. **Cost:** real FE/BE agreement—no surprise Friday patch. **If we skip:** front-end tricks buy time, but a fat feed still bites on **OEM rehearsal / acceptance day.**
+A trade-off means **giving up something tempting** because the alternative fails under load—or **paying coordination cost today** instead of absorbing a nastier surprise when the OEM is watching.
 
-**5.2 One fleet map in `@synaos/realtime-canvas`.** **Upside:** one place for density, smoothing, zoom—one performance story. **Cost:** shared change process; local “wow” needs a quick cross-team chat first. **If we skip:** diverging maps and rehearsing against different truths; painful late merge.
+**5.1 Deltas & viewports versus “ship the JSON tweak quietly.”** A lean realtime contract earns **steady maps and sane bandwidth** near 300 robots, **but** every payload change crosses teams and takes agreement time. Leaving the hose fat keeps **solo velocity** briefly, **yet** jitter tricks and buffering do **not** fix bytes on the wire—acceptance rehearsals stay fragile.
 
-**5.3 Borrowed working-group time + light forums + CI on shared code.** **Upside:** shared numbers, smaller arguments, fewer blindsides. **Cost:** real hours off squad backlogs; leadership must **name** delayed roadmap lines. **If we skip:** hidden integration pain right before the contractual run-through.
+**5.2 `@synaos/realtime-canvas` versus squad-owned canvases.** One shared renderer yields **the same rehearsal picture everywhere** (performance tuning once), **but** map flourishes funnel through shared ownership—you cannot fork five private engines without paying for it. Many canvases maximise **near-term team freedom** **until** rehearsals disagree and merges become political.
 
-**5.4 Leadership in one line.** Fund **smarter wire + shared map engine + borrowed coordination** together—or absorb all three misses at once, late, in front of the customer.
+**5.3 Working-group borrowed time versus “stay in your sprint lane.”** Donating fractional heads to rhythm + CI on shared artefacts trades **straight-line feature throughput** today for fewer cross-squad explosions later. Saving those hours postpones clashes—**risk moves** toward the rehearsal window rather than disappearing.
+
+**5.4 Leaders decide together.** Fund **contract discipline on the wire**, **one shared map engine**, **and borrowed coordination as a unit**—or expect to swallow all three gaps when the runway is gone.
