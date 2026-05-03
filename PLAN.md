@@ -1,23 +1,11 @@
 # Synaos real-time operations dashboard — scaling design
 
-Design document for taking the existing platform from ~60 to ~300 robots on one shopfloor, three new vehicle types, and a second control-room workstation elsewhere, inside ~five months across five multidisciplinary product teams. Angular monorepo, Module Federation micro-frontends, shared design system, NGXS today, shopfloor WebGL map at ~30–37 FPS under current full load.
-
----
-
-## 0. Context and explicit assumptions
-
-The dashboard must absorb a fivefold increase in moving entities on one shopfloor, three previously unmanaged vehicle types, and concurrent visibility from both the on-floor supervisor posture and a **separate-machine** supervisory control-room view. State today arrives via WebSocket several times per second; rendering is realtime WebGL. There is **no frontend platform team today** — and **no unified backend platform team** either: gateway and realtime concerns are sliced across the same five shipping teams.
-
-The document intentionally names unknowns and ties evidence to Phase 0 work rather than inventing certainty.
-
-### Stated assumptions (each falsifiable)
+Design document for taking the existing platform from ~60 to ~300 robots on one shopfloor, three new vehicle types, and a second control-room workstation elsewhere, inside ~five months across five multidisciplinary product teams. Angular monorepo, Module Federation micro-frontends, shared design system, NGXS today, shopfloor WebGL map at ~30–37 FPS under current full load. Our stated assumptions are:
 
 1. **Per-robot telemetry cadence is roughly 5–10 Hz ⇒ ~3k envelopes/sec worst case with 300 robots.** *If materially higher*: earlier backpressure/binary encoding decisions spike in urgency in Phase 0.
 2. **Backend-owning teammates can converge, via working group consensus, on a better websocket contract (deltas; viewport-awareness when achievable) within five months.** *If not*: Worker-side snapshot diffing buys UI-thread calm but leaves bandwidth pain — acceptance risk persists.
 3. **Modern Chromium plus integrated-or-better GPU is a contractual deployment baseline for workstations running the dashboard; we do not build legacy fallbacks.** *If breached*: contractual / facilities escalation, not a quiet engineering carve-out.
 4. **Industrial design produces GLB/textures for new vehicle archetypes roughly by Phase-rehearsal window.** *If late*: fleet 2D unaffected; lazy 3D remote slips visually.
-
----
 
 ## 1. Stakeholders and personas
 
@@ -45,8 +33,6 @@ The document intentionally names unknowns and ties evidence to Phase 0 work rath
 
 Operators plus OEM-visible acceptance outweigh supervisor ornament **if calendar forces choice** — roadmap messaging must say so upfront.
 
----
-
 ## 2. Technical assessment — three core risks
 
 ### R1 — Map rendering fails to scale cleanly to nominal fleet enumeration
@@ -66,8 +52,6 @@ Flooding NGXS selectors with high-frequency deltas starves scrolling and policin
 Friendly framing: absent a signed rehearsal topology plus an aligned contract, teams **guess** topology (duplicate tabs, unknowingly mirrored subscriptions) while still shipping fat JSON snapshots — cumulative acceptance fragility, not one missing `if`.
 
 **Mitigations:** sprint-1 written acceptance diagram (machine topology: one heavyweight live map per workstation, second sanctioned view on separate hardware); phased protocol work (deltas, viewport narrowing when aligned, recovery snapshots); honest Worker-diff fallback without pretending bandwidth disappears overnight.
-
----
 
 ## 3. Architectural approach
 
@@ -135,8 +119,6 @@ flowchart LR
   TelemetryPkg --> AlarmPanels[Feature satellites panels]
 ```
 
----
-
 ## 4. Delivery & organisational strategy (≈20 weeks)
 
 | Phase | Window | Objective |
@@ -159,8 +141,6 @@ flowchart LR
 Borrow ~**three** engineers at **½–¾** concurrent focus **plus Staff** for five calendar months → explicit carve-out from roadmap promises—not implicit heroics. Afterwards either dissolve consciously or elevate formal platform mandate.
 
 Messaging to PM partners: transient velocity dip consciously purchases **singular** rehearsal reliability vs. probabilistic multiplicity of canvases diverging dangerously.
-
----
 
 ## 5. Trade-offs & business framing
 
@@ -194,8 +174,6 @@ Three engineering choices merit executive translation—operators feel them, pur
 
 Invest simultaneously in pipe shape **and** shared canvas mechanics **and** temporary funded alignment—or risk paying all three costs later under OEM spotlight.
 
----
-
 ## 6. Open questions & earliest validations
 
 Check during **Phase 0** (cheap if early, expensive if late):
@@ -205,16 +183,14 @@ Check during **Phase 0** (cheap if early, expensive if late):
 3. Written OEM rehearsal script, signed off, aligning accepted machine choreography (one heavy map per PC, control-room on separate hardware).
 4. Gateway squads **appetite** scorecard for deltas / viewport narrowing vs. phased compromise path.
 5. Industrial model pipeline checkpoints for lazily-loaded 3D remote.
-6. Contractual workstation hardware attestation on file (per assumption 3 in Section 0).
+6. Contractual workstation hardware attestation on file (per assumption 3 above).
 7. Early Signal Store façade spike: NGXS chatter reduction vs façade-only map subscription experiment.
-
----
 
 ## Appendix — suggestion for a 60-minute defence walkthrough (~20 minutes content)
 
 | Minutes | Focus |
 |--------:|------|
-| 2 | Section 0 context + falsifiable assumptions |
+| 2 | Opening assumptions + rationale |
 | 4 | Persons + conflict table → binding priorities |
 | 5 | Risks R1–R3 (plain language emphasis on R3) |
 | 6 | Diagram + façade / canvas packages |
