@@ -57,49 +57,31 @@ Without a signed rehearsal layout and a leaner realtime contract, teams **improv
 
 ## 3. Architectural approach
 
-### 3.1 Data path overview
+The fleet path is one **left-to-right pipeline** (realtime gateway → worker → **`@synaos/telemetry-stream`** → **`@synaos/realtime-canvas`** and other UI). The subsections below walk **each node in that order**; the **reference diagram at the end** gathers the same shapes for orientation.
 
-Unidirectional ideal:
+### 3.1 Walking the pipeline (each box, in diagram order)
 
-1. **Gateway** trims & versions outbound traffic (preferred: deltas; progressive viewport scoping cooperative with BE capacity).
-2. **`@synaos/telemetry-stream` worker** parses & normalises cheaply away from Angular’s interaction thread.
-3. **NgRx Signal Store façade** merges entity truth with **equality-guarded** patch paths — logical no-ops avoided before signals propagate broadly.
-4. **`@synaos/realtime-canvas` (Pixi baseline)** listens to façade-computed narrowly scoped signals (viewport entity bucket, alarms, explicit selection pointer) + performs interpolation tiers for motion continuity.
-5. **NGXS** retains slower tenant / preference facets feeding façade rarely — not heartbeat dispatch amplification.
+1. **Realtime gateway** — Versions and shapes outbound traffic: **deltas** first; **viewport-narrow** subscriptions when backend squads converge. Add sequencing, compaction for slow clients, authoritative **resync** after gaps, and—only if profiling proves it—**binary** payloads instead of assuming JSON is the choke.
 
-_[NgRx Signal Store guide](https://ngrx.io/guide/signals/signal-store)_
+2. **Telemetry Web Worker** — Parses and normalises **off** the Angular main thread so interaction and layout keep their frame budget during bursts.
 
-### 3.2 Comparative renderer choice (fleet 2D)
+3. **`@synaos/telemetry-stream`** — Owns the bridge from Worker into app state: websocket lifecycle, merged entity map, **NgRx Signal Store** as the realtime façade ([Signal Store guide](https://ngrx.io/guide/signals/signal-store)), **equality-guarded** updates so no-op logical states do not ripple consumers, and **narrow `computed` outputs** (viewport slice, alarms, selection, …). If schedule compresses, ship the **same outward API** via `Injectable` + `signal()` first; swap in Signal Store without touching map consumers.
 
-Two credible 2D stacks stand out for a dense, realtime map. **Pixi.js** centres on sprites, batching, and straightforward level-of-detail: it fits a factory-floor map where robots are markers or small icons moving at high frequency **without** tying the product to a full geospatial map stack—we treat it as the **default baseline** behind `@synaos/realtime-canvas`. **deck.gl** is stronger when map data is inherently geospatial and large tiling, layers, and deck’s pipeline are already a platform anchor; for this scenario it is mostly **avoided as default** unless product direction later demands heavy geo overlays, in which case the trade-off becomes worth reopening.
+4. **NGXS (non-hot slices)** — Session, tenancy, slower preferences. **Rare**, explicit merges into the realtime façade—never a per-tick motorway into the fleet map.
 
-**Constraint:** no Three.js on multi-robot fleet canvas—2D only at fleet scale; 3D stays in the lazily loaded single-robot remote.
+5. **`@synaos/realtime-canvas`** — Reads only façade-driven signals. Default **Pixi.js** (batched sprites, zoom **LOD**). **Interpolation runs in the render loop** between sparse telemetry ticks. No Three.js at fleet scale (**C1**). **deck.gl** only if the product later **centres** on heavy geo tiling.
 
-### 3.3 Interaction with backend collaborators
+6. **Operators workstation** — **One** heavyweight live fleet canvas per machine (**C4**); second control room = **different** hardware with its own client.
 
-Prefer incremental protocol slices (version tagging, causal ordering cues, compaction for lagging watchers, authoritative resync bursts). Pursue concise binary wire encodings **only** after traced CPU proof JSON dominates.
+7. **Feature satellite panels** — Other MFE chrome (alarms, supervisory widgets) consumes the **same façade**—no duplicate websocket parsing or noisy NGXS selectors for motion.
 
-### 3.4 Telemetry package responsibilities (`@synaos/telemetry-stream`)
+### 3.2 Outside the main diagram
 
-Owns websocket session lifecycle bridging into worker, merges entity maps, fronts NgRx Signal Store updaters guarded by pragmatic equality predicates, emits minimal computed façades outward for map + ancillary widgets.
+- **Single-robot 3D** — Lazy federated remote (Three.js bundle + CDN `.glb`) on drill-in; fleet map boxes above stay 2D-only.
+- **Federation** — Remote boundaries unchanged; **`@synaos/*`** as shared workspaces; semver / deploy-order checklist when shell and remotes drift.
+- **Postponed** wholesale NGXS removal, replatforming federation for its own sake, **multi-robot live 3D**.
 
-Fallback if schedule compresses painfully: mechanically identical Injectable+signal scaffolding while preserving outward API contract—Signal Store absorbs later without consumer churn.
-
-### 3.5 Optional lazily-loaded 3D remote
-
-User gesture opens federated **`vehicle-detail-3d`**: simultaneous fetch of chunked remote JS (Three bundles) plus CDN model assets until placeholder shell from design-system panels yields to textured scene tying into shared façade selectors.
-
-### 3.6 Federation & delivery hygiene
-
-Maintain existing Module Federation remote boundaries (no mid-programme replatform of federation topology). Publish shared NPM workspaces above. Operational checklist coordinates semver / deploy choreography shell↔remote when canvases ripple — organisational hygiene, previously treated as tertiary risk consciously demoted beneath R1–R3.
-
-### 3.7 Intentionally _not_ replatformed now
-
-- Wholesale NGXS disappearance
-- Redrawing federation graph wholesale
-- Multi-robot live 3D theatre (explicitly postponed)
-
-### 3.8 Reference diagram
+### 3.3 Reference diagram (clarifying summary)
 
 ```mermaid
 flowchart LR
@@ -115,7 +97,7 @@ flowchart LR
   NGXS -. "rare context merges" .-> TelemetryPkg
   TelemetryPkg -->|"narrow computed façade"| CanvasPkg
   CanvasPkg --> OperatorWS
-  TelemetryPkg --> AlarmPanels[Feature satellites panels]
+  TelemetryPkg --> AlarmPanels[Feature satellite panels]
 ```
 
 ## 4. Delivery & organisational strategy (≈20 weeks)
