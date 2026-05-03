@@ -71,10 +71,7 @@ _[NgRx Signal Store guide](https://ngrx.io/guide/signals/signal-store)_
 
 ### 3.2 Comparative renderer choice (fleet 2D)
 
-| Option                                                                       | Consideration                                                                                                   |
-| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| **Pixi.js + batching (+ optional instancing pathways)** — **chosen default** | Mature sprites, straightforward LOD tiers, acceptable GPU discipline for factory-scale topologies.              |
-| **deck.gl**                                                                  | Strong when geospatial tiling stacks dominate platform — probably overshoot unless future geo overlays explode. |
+Two credible 2D stacks stand out for a dense, realtime map. **Pixi.js** centres on sprites, batching, and straightforward level-of-detail: it fits a factory-floor map where robots are markers or small icons moving at high frequency **without** tying the product to a full geospatial map stack—we treat it as the **default baseline** behind `@synaos/realtime-canvas`. **deck.gl** is stronger when map data is inherently geospatial and large tiling, layers, and deck’s pipeline are already a platform anchor; for this scenario it is mostly **avoided as default** unless product direction later demands heavy geo overlays, in which case the trade-off becomes worth reopening.
 
 **Constraint:** no Three.js on multi-robot fleet canvas—2D only at fleet scale; 3D stays in the lazily loaded single-robot remote.
 
