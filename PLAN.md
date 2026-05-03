@@ -69,9 +69,9 @@ The fleet path is one **left-to-right pipeline** (realtime gateway → worker �
 
 4. **NGXS (non-hot slices)** — Session, tenancy, slower preferences. **Rare**, explicit merges into the realtime façade—never a per-tick motorway into the fleet map.
 
-5. **`@synaos/realtime-canvas`** — Reads only façade-driven signals. Default **Pixi.js** (batched sprites, zoom **LOD**). **Interpolation runs in the render loop** between sparse telemetry ticks. No Three.js at fleet scale (**C1**). **deck.gl** only if the product later **centres** on heavy geo tiling.
+5. **`@synaos/realtime-canvas`** — Reads only façade-driven signals. Default **Pixi.js** (batched sprites, zoom **LOD**). **Interpolation runs in the render loop** between sparse telemetry ticks. The **fleet map stays 2D-only**—Three.js appears only on the lazily loaded **single-robot** 3D remote (outside the main pipeline diagram). **deck.gl** only if the product later **centres** on heavy geo tiling.
 
-6. **Operators workstation** — **One** heavyweight live fleet canvas per machine (**C4**); second control room = **different** hardware with its own client.
+6. **Operators workstation** — **One** heavyweight live fleet canvas per workstation (we deliberately avoid two simultaneous live canvases on the **same** machine); the second control room runs on **different** hardware with its own client.
 
 7. **Feature satellite panels** — Other MFE chrome (alarms, supervisory widgets) consumes the **same façade**—no duplicate websocket parsing or noisy NGXS selectors for motion.
 
